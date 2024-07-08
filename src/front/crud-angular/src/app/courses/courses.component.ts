@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { CategoryPipe } from '../shared/pipes/category.pipe';
 import { MatButtonModule } from '@angular/material/button';
+import { ListComponent } from './components/list/list.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -26,7 +27,8 @@ import { ActivatedRoute, Router } from '@angular/router';
         MatProgressSpinnerModule,
         MatIconModule,
         CategoryPipe,
-        MatButtonModule
+        MatButtonModule,
+        ListComponent
     ],
 })
 export class CoursesComponent implements OnInit{
@@ -36,8 +38,8 @@ export class CoursesComponent implements OnInit{
   constructor(
     private courseService: CoursesService,
     private _snackBar: MatSnackBar,
-    private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ){
     this.courses$ = this.courseService.list().pipe(catchError(error => {
       console.log(error);

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { CoursesComponent } from './courses.component';
-import { FormComponent } from './form/form.component';
+import { FormComponent } from './components/form/form.component';
 
 export const COURSES_ROUTES: Routes = [
   {
