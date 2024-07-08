@@ -7,13 +7,13 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class CoursesService {
-  private readonly API = './assets/courses.json';
+  private readonly API = 'api/courses';
 
   constructor(private httpClient: HttpClient) {}
 
   list(): Observable<Course[]> {
     return this.httpClient
       .get<Course[]>(this.API)
-      .pipe(tap((courses) => console.log(courses)));
+      .pipe();
   }
 }

@@ -10,6 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { CategoryPipe } from '../shared/pipes/category.pipe';
+import { MatButtonModule } from '@angular/material/button';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-courses',
@@ -23,14 +25,20 @@ import { CategoryPipe } from '../shared/pipes/category.pipe';
         AsyncPipe,
         MatProgressSpinnerModule,
         MatIconModule,
-        CategoryPipe
+        CategoryPipe,
+        MatButtonModule
     ],
 })
 export class CoursesComponent implements OnInit{
-  displayedColumns: string[] = ['id', 'name', 'category'];
+  displayedColumns: string[] = ['id', 'name', 'category', 'actions'];
   courses$: Observable<Course[]>;
 
-  constructor(private courseService: CoursesService,private _snackBar: MatSnackBar){
+  constructor(
+    private courseService: CoursesService,
+    private _snackBar: MatSnackBar,
+    private router: Router,
+    private route: ActivatedRoute
+  ){
     this.courses$ = this.courseService.list().pipe(catchError(error => {
       console.log(error);
       this.openSnackBar(error.message, "Ok")
@@ -43,5 +51,9 @@ export class CoursesComponent implements OnInit{
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
+  }
+
+  onAdd(){
+    this.router.navigate(['formulario'], {relativeTo: this.route})
   }
 }
