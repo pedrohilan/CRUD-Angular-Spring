@@ -13,6 +13,8 @@ import { CategoryPipe } from '../shared/pipes/category.pipe';
 import { MatButtonModule } from '@angular/material/button';
 import { ListComponent } from './components/list/list.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialog } from '../shared/dialogs/confirmDialog/confirmDialog.component';
 
 @Component({
     selector: 'app-courses',
@@ -33,14 +35,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CoursesComponent implements OnInit{
   displayedColumns: string[] = ['id', 'name', 'category', 'actions'];
-  courses$: Observable<Course[]>;
+  courses$: Observable<Course[]> | null = null;
 
   constructor(
     private courseService: CoursesService,
     private _snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ){
+    this.load();
+  }
+
+  load(){
     this.courses$ = this.courseService.list().pipe(catchError(error => {
       console.log(error);
       this.openSnackBar(error.message, "Ok")
@@ -57,5 +64,30 @@ export class CoursesComponent implements OnInit{
 
   onAdd(){
     this.router.navigate(['formulario'], {relativeTo: this.route})
+  }
+
+  onEdit(id: number){
+    this.router.navigate(['editar', id], {relativeTo: this.route})
+  }
+
+  onDelete(id: number){
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '250px',
+      data: "Deseja excluir este registro?"
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        this.courseService.delete(id).subscribe(
+          next => {
+            this.load();
+            this.openSnackBar("Excluído com sucesso", "Ok");
+          },
+          error => {
+            this.openSnackBar("Erro ao excluir curso", "Ok");
+          }
+          )
+      }
+    })
   }
 }

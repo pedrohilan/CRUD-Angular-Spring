@@ -15,6 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class ListComponent implements OnInit{
   @Input() courses: Course[] = [];
   @Output() add = new EventEmitter();
+  @Output() edit = new EventEmitter();
+  @Output() delete = new EventEmitter();
 
   displayedColumns: string[] = ['id', 'name', 'category', 'actions'];
 
@@ -28,5 +30,13 @@ export class ListComponent implements OnInit{
 
   onAdd(){
     this.add.emit(true);
+  }
+
+  onEdit(id: number){
+    this.edit.emit(id);
+  }
+
+  onDelete(id: number){
+    this.delete.emit(id);
   }
 }

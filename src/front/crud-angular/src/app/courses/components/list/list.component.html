@@ -23,11 +23,11 @@
       </button>
     </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <button mat-icon-button color="primary" aria-label="Editar um curso">
+      <button (click)="onEdit(element._id)" mat-icon-button color="primary" aria-label="Editar um curso">
         <mat-icon>edit</mat-icon>
       </button>
 
-      <button mat-icon-button color="warning" aria-label="Deletar um curso">
+      <button (click)="onDelete(element._id)" mat-icon-button color="warning" aria-label="Deletar um curso">
         <mat-icon>delete</mat-icon>
       </button>
     </mat-cell>

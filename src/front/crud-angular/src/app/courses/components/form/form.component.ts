@@ -10,6 +10,7 @@ import { CoursesService } from '../../services/courses.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Location } from '@angular/common';
 import { Course } from '../../models/course';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -29,6 +30,7 @@ import { Course } from '../../models/course';
 })
 export class FormComponent implements OnInit{
   form = this.formBuilder.group({
+    _id: [''],
     name: [''],
     category: ['']
   });
@@ -37,11 +39,19 @@ export class FormComponent implements OnInit{
     private formBuilder: NonNullableFormBuilder,
     private courseService: CoursesService,
     private _snackBar: MatSnackBar,
-    private location: Location
+    private location: Location,
+    private route: ActivatedRoute
   ){}
 
   ngOnInit(): void {
-
+    const course: Course = this.route.snapshot.data['course'];
+    if(course._id != null){
+      this.form.setValue({
+        _id: course._id,
+        name: course.name,
+        category: course.category
+      });
+    }
   }
 
   openSnackBar(message: string, action: string) {
@@ -59,6 +69,8 @@ export class FormComponent implements OnInit{
       }
     )
   }
+
+
 
   onCancel(){
     this.location.back();
