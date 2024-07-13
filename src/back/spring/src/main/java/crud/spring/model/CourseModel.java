@@ -1,6 +1,10 @@
 package crud.spring.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import crud.spring.enums.CategoryEnum;
+import crud.spring.enums.StatusEnum;
+import crud.spring.enums.converters.CategoryConverter;
+import crud.spring.enums.converters.StatusConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,12 +31,11 @@ public class CourseModel {
     private String name;
 
     @NotNull
-    @NotBlank
-    @Length(max = 10)
-    @Column(length = 10, nullable = false)
-    private String category;
+    @Column(nullable = false)
+    @Convert(converter = CategoryConverter.class)
+    private CategoryEnum category;
 
     @NotNull
-    @NotBlank
-    private String status = "Ativo";
+    @Convert(converter = StatusConverter.class)
+    private StatusEnum status = StatusEnum.ACTIVE;
 }
