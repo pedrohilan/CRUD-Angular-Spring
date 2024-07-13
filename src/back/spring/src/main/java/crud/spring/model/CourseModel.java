@@ -13,6 +13,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "course")
@@ -38,4 +41,7 @@ public class CourseModel {
     @NotNull
     @Convert(converter = StatusConverter.class)
     private StatusEnum status = StatusEnum.ACTIVE;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "course")
+    private List<LessonModel> lessons = new ArrayList<>();
 }
