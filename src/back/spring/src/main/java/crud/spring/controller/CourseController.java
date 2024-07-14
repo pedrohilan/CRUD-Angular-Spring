@@ -1,11 +1,13 @@
 package crud.spring.controller;
 
 import crud.spring.dto.CourseDTO;
+import crud.spring.dto.CoursePageDTO;
 import crud.spring.service.CourseService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +17,18 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/api/courses")
-@AllArgsConstructor
 public class CourseController {
 
     private final CourseService courseService;
 
+    public CourseController(CourseService courseService) {
+        this.courseService = courseService;
+    }
+
     @GetMapping
-    public List<CourseDTO> GetAllCourses() {
-        return courseService.findAll();
+    public CoursePageDTO GetAllCourses(@RequestParam(defaultValue = "0") @PositiveOrZero int page,
+                                             @RequestParam(defaultValue = "10") @Positive @Max(100) int pageSize) {
+        return courseService.findAll(page, pageSize);
     }
 
     @PostMapping

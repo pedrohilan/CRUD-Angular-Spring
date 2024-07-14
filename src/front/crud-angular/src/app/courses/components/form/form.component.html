@@ -1,31 +1,99 @@
 <mat-card>
   <mat-toolbar color="primary">
-      <span>Detalhes do Curso</span>
+    <span>Detalhes do Curso</span>
   </mat-toolbar>
   <form [formGroup]="form" class="min-width">
-      <mat-form-field class="full-width">
-        <mat-label>Nome: </mat-label>
-        <input #name matInput placeholder="Nome" formControlName="name" matInput>
-        <mat-hint>{{name.value.length || 0}}/100</mat-hint>
-        @if (form.get('name')?.hasError) {
-          <mat-error>{{getErrorMessage('name')}}</mat-error>
-        }
-      </mat-form-field>
+    <mat-form-field class="full-width">
+      <mat-label>Nome: </mat-label>
+      <input
+        #name
+        matInput
+        placeholder="Nome"
+        formControlName="name"
+        matInput
+      />
+      <mat-hint>{{ name.value.length || 0 }}/100</mat-hint>
+      @if (form.get('name')?.hasError) {
+      <mat-error>{{ formUtils.getErrorMessage(form, "name") }}</mat-error>
+      }
+    </mat-form-field>
 
-      <mat-form-field class="full-width">
-        <mat-label>Categoria</mat-label>
-        <mat-select formControlName="category">
-          <mat-option value="front-end">Front End</mat-option>
-          <mat-option value="back-end">Back End</mat-option>
-        </mat-select>
-        @if (form.get('category')?.hasError) {
-          <mat-error>{{getErrorMessage('category')}}</mat-error>
-        }
-      </mat-form-field>
+    <mat-form-field class="full-width">
+      <mat-label>Categoria</mat-label>
+      <mat-select formControlName="category">
+        <mat-option value="front-end">Front End</mat-option>
+        <mat-option value="back-end">Back End</mat-option>
+      </mat-select>
+      @if (form.get('category')?.hasError) {
+      <mat-error>{{ formUtils.getErrorMessage(form, "category") }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-toolbar>
+      <span>Aulas</span>
+      <button color="accent" mat-icon-button (click)="addNewLesson()">
+        <mat-icon aria-label="Adicionar uma nova aula">add</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    @if (formUtils.isFormArrayRequired(form, 'lessons')) {
+    <mat-error class="form-array-error">Adicione pelo menos uma aula</mat-error>
+    }
+
+    @for (lesson of getLessonsFormArray(); track $index) {
+    <table formArrayName="lessons">
+      <tr [formGroupName]="$index">
+        <td style="width: 75%">
+          <mat-form-field class="full-width">
+            <label>Nome da aula</label>
+            <input matInput formControlName="name" />
+            @if (getLessonsFormArray()[$index].get('name')?.hasError) {
+            <mat-error>
+              {{
+                formUtils.getFormArrayFieldErrorMessage(
+                  form,
+                  "lessons",
+                  "name",
+                  $index
+                )
+              }}
+            </mat-error>
+            }
+          </mat-form-field>
+        </td>
+        <td style="width: 15%">
+          <mat-form-field class="full-width">
+            <label>URL da aula</label>
+            <span matPrefix>https://youtu.be/</span>
+            <input matInput formControlName="youtubeUrl" />
+            @if (getLessonsFormArray()[$index].get('youtubeUrl')?.hasError) {
+            <mat-error>
+              {{
+                formUtils.getFormArrayFieldErrorMessage(
+                  form,
+                  "youtubeUrl",
+                  "name",
+                  $index
+                )
+              }}
+            </mat-error>
+            }
+          </mat-form-field>
+        </td>
+        <td>
+          <button mat-icon-button color="warn" (click)="removeLesson($index)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </table>
+    }
   </form>
 
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="onSubmit()">Salvar</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()">
+      Salvar
+    </button>
     <button mat-raised-button (click)="onCancel()">Cancelar</button>
   </mat-card-actions>
 </mat-card>
