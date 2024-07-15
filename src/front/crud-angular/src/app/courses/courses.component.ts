@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Course } from './models/course';
 import { CoursesService } from './services/courses.service';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, of, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbar } from '@angular/material/toolbar';
@@ -15,6 +15,8 @@ import { ListComponent } from './components/list/list.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialog } from '../shared/dialogs/confirmDialog/confirmDialog.component';
+import { CoursePage } from './models/course-page';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
     selector: 'app-courses',
@@ -30,12 +32,18 @@ import { ConfirmDialog } from '../shared/dialogs/confirmDialog/confirmDialog.com
         MatIconModule,
         CategoryPipe,
         MatButtonModule,
-        ListComponent
+        ListComponent,
+        MatPaginatorModule
     ],
 })
 export class CoursesComponent implements OnInit{
   displayedColumns: string[] = ['id', 'name', 'category', 'actions'];
-  courses$: Observable<Course[]> | null = null;
+  courses$: Observable<CoursePage> | null = null;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  pageIndex = 0;
+  pageSize = 10;
 
   constructor(
     private courseService: CoursesService,
@@ -47,11 +55,16 @@ export class CoursesComponent implements OnInit{
     this.load();
   }
 
-  load(){
-    this.courses$ = this.courseService.list().pipe(catchError(error => {
+  load(event: PageEvent = {length: 0, pageIndex: 0, pageSize: 10}){
+    this.courses$ = this.courseService.list(event.pageIndex, event.pageSize).pipe(
+      tap(() => {
+        this.pageIndex = event.pageIndex;
+        this.pageSize = event.pageSize;
+      }),
+      catchError(error => {
       console.log(error);
       this.openSnackBar(error.message, "Ok")
-      return of([])
+      return of({courses: [], totalElements: 0, totalPages: 0})
     }))
   }
 

@@ -14,6 +14,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,9 @@ import java.util.List;
 @Table(name = "course")
 @SQLDelete(sql = "Update course set status = 'Inativo' where id = ?")
 @Where(clause = "status = 'Ativo'")
-public class CourseModel {
+public class CourseModel implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonProperty("_id")

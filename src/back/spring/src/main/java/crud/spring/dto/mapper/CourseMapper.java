@@ -54,6 +54,8 @@ public class CourseMapper {
             return null;
         }
 
+        System.out.println(value);
+
         return switch(value){
             case "front-end" -> CategoryEnum.FRONTEND;
             case "back-end" -> CategoryEnum.BACKEND;

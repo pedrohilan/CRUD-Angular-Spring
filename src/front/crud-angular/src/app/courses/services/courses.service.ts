@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Course } from '../models/course';
 import { HttpClient } from '@angular/common/http';
 import { first, Observable, tap } from 'rxjs';
+import { CoursePage } from '../models/course-page';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +12,9 @@ export class CoursesService {
 
   constructor(private httpClient: HttpClient) {}
 
-  list(): Observable<Course[]> {
+  list(page = 0, pageSize = 10): Observable<CoursePage> {
     return this.httpClient
-      .get<Course[]>(this.API)
+      .get<CoursePage>(this.API, {params: {page, pageSize}})
       .pipe();
   }
 

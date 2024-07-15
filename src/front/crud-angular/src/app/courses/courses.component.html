@@ -4,7 +4,11 @@
   </mat-toolbar>
   @if(courses$ | async; as courses){
     <div class="column-flex mat-elevation-z8">
-      <app-list [courses]="courses" (add)="onAdd()" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-list>
+      <app-list [courses]="courses.courses" (add)="onAdd()" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-list>
+      <mat-paginator
+      [pageSizeOptions]="[5,10,50]" showFirstLastButtons
+      [pageIndex]="pageIndex" [pageSize]="pageSize"
+      [length]="courses.totalElements" (page)="load($event)"></mat-paginator>
     </div>
   }
   @else{
